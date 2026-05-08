@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام إدارة المشاريع — NCEC</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0ede8;color:#1A2332;direction:rtl;font-size:13px}
+.hdr{background:#1A2332;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200}
+.hdr-t{color:#fff;font-size:16px;font-weight:700}
+.hdr-s{color:rgba(255,255,255,.4);font-size:10px;margin-top:2px}
+.nav{background:#fff;border-bottom:1px solid #D3D1C7;display:flex;flex-wrap:wrap;position:sticky;top:56px;z-index:199;padding:0 8px}
+.nb{padding:11px 12px;font-size:12px;font-weight:500;border:none;background:none;cursor:pointer;color:#444441;border-bottom:3px solid transparent;white-space:nowrap}
+.nb.on{color:#0D7B5E;border-bottom-color:#0D7B5E}
+.nb:hover{color:#0D7B5E}
+.main{padding:18px 22px;max-width:1400px;margin:0 auto}
+.sec{display:none}.sec.on{display:block}
+.mcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.mc{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:14px;text-align:center}
+.mc-l{font-size:10px;color:#888;margin-bottom:5px}
+.mc-v{font-size:24px;font-weight:700}
+.pcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:18px}
+.pc{background:#fff;border:1px solid #D3D1C7;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.pc:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.pch{padding:13px 15px 10px;border-bottom:1px solid #D3D1C7}
+.pcc{font-size:9px;font-weight:700;letter-spacing:1px;color:#0D7B5E;margin-bottom:3px}
+.pcn{font-size:13px;font-weight:600;line-height:1.4}
+.pcb{padding:11px 15px}
+.pr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f5f3ef;font-size:11px}
+.pr:last-child{border-bottom:none}
+.pr-l{color:#888}.pr-v{font-weight:500;max-width:60%;text-align:left}
+.pw{padding:10px 15px;background:#F1EFE8;border-top:1px solid #D3D1C7}
+.ph{display:flex;justify-content:space-between;font-size:10px;margin-bottom:5px}
+.pb{height:7px;background:#e0ddd8;border-radius:4px;overflow:hidden}
+.pf{height:100%;border-radius:4px;background:#0D7B5E}
+.pf.a{background:#BA7517}
+.tw{padding:5px 15px 12px;background:#F1EFE8}
+.tr{display:flex;justify-content:space-between;font-size:9px;color:#999;margin-bottom:3px}
+.tb{height:4px;background:#e0ddd8;border-radius:3px;overflow:hidden}
+.tf{height:100%;border-radius:3px;background:#185FA5}
+.pcf{padding:9px 15px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #D3D1C7}
+.bdg{padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;display:inline-block}
+.bt{background:#E1F5EE;color:#0D7B5E}
+.bb{background:#E6F1FB;color:#185FA5}
+.bp{background:#EEEDFE;color:#534AB7}
+.ba{background:#FAEEDA;color:#BA7517}
+.br{background:#FCEBEB;color:#A32D2D}
+.bg{background:#EAF3DE;color:#3B6D11}
+.bgy{background:#F1EFE8;color:#444441}
+.tc{background:#fff;border-radius:10px;border:1px solid #D3D1C7;overflow:hidden;margin-bottom:18px}
+.th{padding:12px 15px;border-bottom:1px solid #D3D1C7;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.tt{font-size:13px;font-weight:600}
+.fr{padding:9px 15px;border-bottom:1px solid #D3D1C7;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.fb{padding:4px 11px;border-radius:14px;border:1px solid #D3D1C7;background:#fff;font-size:11px;cursor:pointer;color:#444441}
+.fb.on,.fb:hover{background:#0D7B5E;color:#fff;border-color:#0D7B5E}
+.si{padding:6px 11px;border:1px solid #D3D1C7;border-radius:7px;font-size:11px;width:180px;outline:none}
+.si:focus{border-color:#0D7B5E}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{background:#1A2332;color:#fff;padding:8px 10px;text-align:right;font-weight:500;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid #f5f3ef;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#fafaf8}
+tr:hover td{background:#E1F5EE}
+.btn-a{background:#0D7B5E;color:#fff;padding:7px 14px;border:none;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-r{background:#A32D2D;color:#fff;padding:7px 14px;border:none;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-s{background:#F1EFE8;color:#444441;border:1px solid #D3D1C7;padding:7px 14px;border-radius:7px;font-size:11px;cursor:pointer}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.mo.open{display:flex}
+.md{background:#fff;border-radius:14px;padding:24px;width:520px;max-width:92vw;max-height:86vh;overflow-y:auto}
+.md-t{font-size:16px;font-weight:700;margin-bottom:18px}
+.fg{margin-bottom:12px}
+.fl{font-size:11px;font-weight:500;color:#444441;margin-bottom:4px;display:block}
+.fi{width:100%;padding:8px 11px;border:1px solid #D3D1C7;border-radius:7px;font-size:12px;font-family:inherit;direction:rtl;outline:none}
+.fi:focus{border-color:#0D7B5E}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.dc{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:14px}
+.dc-t{font-size:10px;font-weight:600;color:#0D7B5E;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #E1F5EE;text-transform:uppercase;letter-spacing:.5px}
+.df{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f5f3ef;font-size:11px}
+.df:last-child{border-bottom:none}
+.df-l{color:#888}.df-v{font-weight:500}
+.sc{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:16px;margin-bottom:14px}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:18px}
+.cc{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:14px}
+.tl-i{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #f5f3ef;align-items:flex-start}
+.tl-i:last-child{border-bottom:none}
+.tl-d{width:8px;height:8px;border-radius:50%;background:#0D7B5E;margin-top:4px;flex-shrink:0}
+.tl-d.a{background:#BA7517}
+.ai-i{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f5f3ef;font-size:11px}
+.ai-i:last-child{border-bottom:none}
+.ck{width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.ck-y{background:#EAF3DE;color:#3B6D11}
+.ck-n{background:#FCEBEB;color:#A32D2D}
+.fo{background:#F1EFE8;border-radius:7px;padding:14px;font-family:'Courier New',monospace;font-size:11px;direction:ltr;text-align:left;white-space:pre-wrap;line-height:1.9;border:1px solid #D3D1C7}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+@media(max-width:700px){.dg{grid-template-columns:1fr}.main{padding:10px 12px}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-t">نظام إدارة المشاريع — NCEC</div>
+    <div class="hdr-s">المركز الوطني للرقابة على الالتزام البيئي</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="https://1drv.ms/x/c/40102649834eb30c/IQCvRAry7oaSR7lts4G449WJAZJiylICYBp57KKLe3fWOXY?e=jGHRG9" target="_blank" style="color:rgba(255,255,255,.65);font-size:10px;text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:3px 9px;border-radius:5px">Excel</a>
+    <span id="hd" style="color:rgba(255,255,255,.45);font-size:10px"></span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nb on" data-s="dash">لوحة التحكم</button>
+  <button class="nb" data-s="proj">المشاريع</button>
+  <button class="nb" data-s="docs">المستندات</button>
+  <button class="nb" data-s="meet">الاجتماعات</button>
+  <button class="nb" data-s="act">الإجراءات</button>
+  <button class="nb" data-s="corr">المراسلات</button>
+  <button class="nb" data-s="risk">المخاطر</button>
+  <button class="nb" data-s="con">المقاولون</button>
+  <button class="nb" data-s="audit">جاهزية التدقيق</button>
+  <button class="nb" data-s="fold">المجلدات</button>
+</div>
+
+<div class="main">
+
+<div id="dash" class="sec on">
+  <div class="sh">
+    <div><div style="font-size:17px;font-weight:700">نظرة عامة</div><div style="font-size:11px;color:#888;margin-top:2px">برنامج إصلاح الأضرار البيئية</div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-r" id="btn-rpt">تقرير PDF</button>
+      <button class="btn-a" id="btn-np">+ مشروع جديد</button>
+    </div>
+  </div>
+  <div class="mcg" id="dm"></div>
+  <div class="pcg" id="dp"></div>
+  <div class="tc"><div class="th"><span class="tt">آخر الأنشطة</span></div><div style="padding:14px 16px" id="dtl"></div></div>
+</div>
+
+<div id="proj" class="sec">
+  <div class="sh">
+    <div style="font-size:17px;font-weight:700">تفاصيل المشاريع</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-r" id="btn-rpt2">تقرير PDF</button>
+      <button class="btn-a" id="btn-np2">+ مشروع جديد</button>
+    </div>
+  </div>
+  <div id="pl"></div>
+</div>
+
+<div id="docs" class="sec">
+  <div class="sh"><div style="font-size:17px;font-weight:700">سجل المستندات</div><button class="btn-a" id="btn-adoc">+ إضافة</button></div>
+  <div class="mcg" id="doc-m"></div>
+  <div class="tc">
+    <div class="fr">
+      <input class="si" id="doc-s" placeholder="بحث...">
+      <button class="fb on" data-dp="all">الكل</button>
+      <button class="fb" data-dp="CLTM-2">CLTM-2</button>
+      <button class="fb" data-dp="MARC">MARC</button>
+      <button class="fb" data-dp="AAIR">AAIR</button>
+      <button class="fb" data-dp="FCRP">FCRP</button>
+    </div>
+    <table><thead><tr><th>#</th><th>المشروع</th><th>الاسم</th><th>النوع</th><th>التاريخ</th><th>الحالة</th><th>المسؤول</th></tr></thead>
+    <tbody id="doc-b"></tbody></table>
+  </div>
+</div>
+
+<div id="meet" class="sec">
+  <div class="sh"><div style="font-size:17px;font-weight:700">سجل الاجتماعات</div><button class="btn-a" id="btn-ameet">+ إضافة</button></div>
+  <div class="mcg" id="meet-m"></div>
+  <div class="tc">
+    <div class="fr">
+      <input class="si" id="meet-s" placeholder="بحث...">
+      <button class="fb on" data-mp="all">الكل</button>
+      <button class="fb" data-mp="CLTM-2">CLTM-2</button>
+      <button class="fb" data-mp="MARC">MARC</button>
+      <button class="fb" data-mp="AAIR">AAIR</button>
+      <button class="fb" data-mp="FCRP">FCRP</button>
+    </div>
+    <table><thead><tr><th>#</th><th>المشروع</th><th>الموضوع</th><th>التاريخ</th><th>النوع</th><th>الحضور</th><th>الإجراءات</th></tr></thead>
+    <tbody id="meet-b"></tbody></table>
+  </div>
+</div>
+
+<div id="act" class="sec">
+  <div class="sh"><div style="font-size:17px;font-weight:700">الإجراءات المفتوحة</div><button class="btn-a" id="btn-aact">+ إضافة</button></div>
+  <div class="tc">
+    <div class="fr">
+      <button class="fb on" data-ap="all">الكل</button>
+      <button class="fb" data-ap="عالية">عالية</button>
+      <button class="fb" data-ap="متوسطة">متوسطة</button>
+      <button class="fb" data-ap="مكتمل">مكتمل</button>
+    </div>
+    <table><thead><tr><th>#</th><th>المشروع</th><th>الإجراء</th><th>المسؤول</th><th>الأولوية</th><th>الموعد</th><th>الحالة</th></tr></thead>
+    <tbody id="act-b"></tbody></table>
+  </div>
+</div>
+
+<div id="corr" class="sec">
+  <div class="sh"><div style="font-size:17px;font-weight:700">سجل المراسلات</div><button class="btn-a" id="btn-acorr">+ إضافة</button></div>
+  <div class="tc">
+    <div class="fr">
+      <button class="fb on" data-cd="all">الكل</button>
+      <button class="fb" data-cd="صادر">صادر</button>
+      <button class="fb" data-cd="وارد">وارد</button>
+    </div>
+    <table><thead><tr><th>#</th><th>المشروع</th><th>الموضوع</th><th>الاتجاه</th><th>التاريخ</th><th>من</th><th>إلى</th><th>رد؟</th></tr></thead>
+    <tbody id="corr-b"></tbody></table>
+  </div>
+</div>
+
+<div id="risk" class="sec">
+  <div class="sh"><div style="font-size:17px;font-weight:700">سجل المخاطر</div><button class="btn-a" id="btn-arisk">+ إضافة</button></div>
+  <div class="tc">
+    <div class="fr">
+      <button class="fb on" data-rl="all">الكل</button>
+      <button class="fb" data-rl="مرتفع">مرتفع</button>
+      <button class="fb" data-rl="متوسط">متوسط</button>
+      <button class="fb" data-rl="محلول">محلول</button>
+    </div>
+    <table><thead><tr><th>#</th><th>المشروع</th><th>المخاطرة</th><th>المستوى</th><th>الإجراء</th><th>الحالة</th></tr></thead>
+    <tbody id="risk-b"></tbody></table>
+  </div>
+</div>
+
+<div id="con" class="sec">
+  <div style="font-size:17px;font-weight:700;margin-bottom:14px">المقاولون والاستشاريون</div>
+  <div class="cg" id="con-g"></div>
+</div>
+
+<div id="audit" class="sec">
+  <div class="sh"><div><div style="font-size:17px;font-weight:700">جاهزية التدقيق</div><div style="font-size:11px;color:#888;margin-top:2px">مدى اكتمال التوثيق لكل مشروع</div></div></div>
+  <div id="audit-b"></div>
+</div>
+
+<div id="fold" class="sec">
+  <div style="font-size:17px;font-weight:700;margin-bottom:14px">هيكل المجلدات</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="tc"><div class="th"><span class="tt">الهيكل الموحد</span></div><div style="padding:14px"><div class="fo" id="fold-t"></div></div></div>
+    <div class="dc"><div class="dc-t">توليد هيكل جديد</div>
+      <div class="fg"><label class="fl">رمز المشروع</label><input class="fi" id="np-c" placeholder="ENV-006"></div>
+      <div class="fg"><label class="fl">الاسم</label><input class="fi" id="np-n" placeholder="اسم المشروع"></div>
+      <div class="fg"><label class="fl">المقاول</label><input class="fi" id="np-co" placeholder="اسم الشركة"></div>
+      <button class="btn-a" style="width:100%;margin-top:6px" id="btn-gen">توليد</button>
+      <div id="gen-o" style="display:none;margin-top:12px">
+        <div class="fo" id="fold-n"></div>
+        <button class="btn-s" style="width:100%;margin-top:8px" id="btn-copy">نسخ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="mo-proj">
+  <div class="md">
+    <div class="md-t">إضافة مشروع جديد</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fg"><label class="fl">الرمز *</label><input class="fi" id="ap-c"></div>
+      <div class="fg"><label class="fl">الاسم *</label><input class="fi" id="ap-n"></div>
+      <div class="fg"><label class="fl">المقاول</label><input class="fi" id="ap-co"></div>
+      <div class="fg"><label class="fl">قيمة العقد</label><input class="fi" id="ap-v"></div>
+      <div class="fg"><label class="fl">تاريخ البدء</label><input class="fi" id="ap-d" type="date"></div>
+      <div class="fg"><label class="fl">تاريخ الانتهاء</label><input class="fi" id="ap-e" type="date"></div>
+      <div class="fg"><label class="fl">المدة</label><input class="fi" id="ap-du"></div>
+      <div class="fg"><label class="fl">مدير المشروع</label><input class="fi" id="ap-pm"></div>
+    </div>
+    <div class="fg"><label class="fl">المرحلة</label>
+      <select class="fi" id="ap-ph">
+        <option>طرح ومنافسة</option><option>تقييم عروض</option>
+        <option>ترسية وتعاقد</option><option>تنفيذ</option>
+        <option>تصميم</option><option>دراسة جدوى</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">نسبة الإنجاز %</label><input class="fi" id="ap-pr" type="number" min="0" max="100" value="0"></div>
+    <div class="fg"><label class="fl">ملاحظات</label><textarea class="fi" id="ap-no" rows="2"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btn-a" style="flex:1" id="btn-sp">حفظ</button>
+      <button class="btn-s" id="btn-cl">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="mo-brief">
+  <div class="md" style="width:660px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="md-t" style="margin:0" id="brief-t">ملخص المشروع</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-r" id="btn-print" style="font-size:10px;padding:5px 10px">طباعة</button>
+        <button class="btn-s" id="btn-cb" style="padding:5px 10px">✕</button>
+      </div>
+    </div>
+    <div id="brief-b"></div>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══
+var P = [
+  {code:"CLTM-2",name:"الرقابة الساحلية طويلة الأمد — المرحلة الثانية",nameEn:"Coastal Long Term Monitoring Program – Phase II",number:"62/00/71",contractor:"شركة بانديون المحدودة",contractDate:"22/11/2023",endDate:"2028-11-22",contractValue:"38,410,000",duration:"60 شهراً",status:"نشط",phase:"تنفيذ + تدريب",progress:28,lastMeeting:"04/07/2024",openActions:1,health:"جيد",pm:"م. فهد بن يوسف الحمود",note:"التقرير السنوي الأول مكتمل — السنة الثانية جارية"},
+  {code:"MARC",name:"تصميم مجمع الأبحاث البحرية التطبيقية",nameEn:"Marine Applied Research Center Design",number:"62/00/47",contractor:"Euro Group وشريكه للاستشارات الهندسية",contractDate:"15/11/2023",endDate:"2025-02-15",contractValue:"11,385,000",duration:"15 شهراً",status:"نشط",phase:"تصميم مفاهيمي",progress:55,lastMeeting:"07/04/2025",openActions:3,health:"متابعة مطلوبة",pm:"م. مالك البدر",note:"استؤنف ديسمبر 2024 بعد إيقاف 4 أشهر — اجتماعات مكثفة مارس-أبريل 2025"},
+  {code:"AAIR",name:"معالجة جزيرة أبوعلي — المرحلة الأولى",nameEn:"Abu Ali Island Coastal Remediation – Phase 1",number:"62/00/74",contractor:"قيد الترسية",contractDate:"قيد الإنجاز",endDate:"",contractValue:"قيد التقييم",duration:"12 شهراً",status:"نشط",phase:"تقييم الطرح الثاني",progress:15,lastMeeting:"13/08/2025",openActions:2,health:"قيد المتابعة",pm:"م. فهد بن يوسف الحمود",note:"رقم 74/00/62 — اللجنة الفنية: م. صالح المطيري رئيساً — الطرح عبر اعتماد"},
+  {code:"FCRP",name:"مشروع المعالجة الساحلية المستقبلية",nameEn:"Future Coastal Remediation Program – Phase 1",number:"62/00/75",contractor:"قيد الترسية — 8 شركات تقدمت",contractDate:"قيد الإنجاز",endDate:"",contractValue:"قيد التقييم",duration:"12 شهراً",status:"نشط",phase:"تقييم العروض الفنية",progress:20,lastMeeting:"13/08/2025",openActions:2,health:"قيد المتابعة",pm:"م. فهد بن يوسف الحمود",note:"رقم 75/00/62 — 9 مواقع معالجة ساحلية — كراسة V5 معتمدة"}
+];
+
+var DO = [
+  {id:1,project:"CLTM-2",name:"وثيقة العقد الأصلية",type:"عقد",date:"22/11/2023",version:"V1",status:"معتمد",owner:"م. فهد الحمود"},
+  {id:2,project:"CLTM-2",name:"محضر الاجتماع الافتتاحي KOM",type:"محضر اجتماع",date:"27/11/2023",version:"V1",status:"معتمد",owner:"م. فهد الحمود"},
+  {id:3,project:"CLTM-2",name:"خطة التنفيذ Implementation Plan",type:"خطة",date:"29/11/2023",version:"V1",status:"معتمد",owner:"بانديون"},
+  {id:4,project:"CLTM-2",name:"التقرير السنوي الأول",type:"تقرير",date:"04/07/2024",version:"V1",status:"معتمد",owner:"م. فهد الحمود"},
+  {id:5,project:"CLTM-2",name:"خطة التدريب 2025-2027",type:"خطة",date:"07/08/2024",version:"V1",status:"معتمد",owner:"بانديون"},
+  {id:6,project:"MARC",name:"وثيقة العقد — Euro Group",type:"عقد",date:"15/11/2023",version:"V1",status:"معتمد",owner:"م. مالك البدر"},
+  {id:7,project:"MARC",name:"ميثاق المشروع Project Charter",type:"ميثاق",date:"22/11/2023",version:"V1",status:"معتمد",owner:"م. مالك البدر"},
+  {id:8,project:"MARC",name:"محضر تسليم الموقع",type:"محضر",date:"22/11/2023",version:"V1",status:"معتمد",owner:"م. مالك البدر"},
+  {id:9,project:"MARC",name:"خطاب إيقاف المشروع",type:"خطاب",date:"15/08/2024",version:"V1",status:"معتمد",owner:"NCEC"},
+  {id:10,project:"MARC",name:"خطاب استئناف المشروع",type:"خطاب",date:"15/12/2024",version:"V1",status:"معتمد",owner:"NCEC"},
+  {id:11,project:"MARC",name:"محضر ورشة الرؤية المشتركة",type:"محضر اجتماع",date:"07/04/2025",version:"V1",status:"قيد الإعداد",owner:"م. مالك البدر"},
+  {id:12,project:"AAIR",name:"خطاب طلب اعتماد الطرح",type:"خطاب",date:"21/05/2025",version:"V1",status:"معتمد",owner:"م. فهد الحمود"},
+  {id:13,project:"AAIR",name:"قرار إداري تشكيل اللجنة الفنية",type:"قرار",date:"قيد التحديث",version:"V1",status:"معتمد",owner:"الرئيس التنفيذي"},
+  {id:14,project:"AAIR",name:"كراسة الشروط النهائية",type:"كراسة",date:"13/08/2025",version:"V6-Final",status:"معتمد",owner:"NCEC"},
+  {id:15,project:"AAIR",name:"محضر ورشة مقدمي العطاءات",type:"محضر اجتماع",date:"13/08/2025",version:"Rev1",status:"معتمد",owner:"NCEC"},
+  {id:16,project:"FCRP",name:"كراسة الشروط V5 النهائية",type:"كراسة",date:"قيد التحديث",version:"V5-Final",status:"معتمد",owner:"NCEC"},
+  {id:17,project:"FCRP",name:"محضر ورشة مقدمي العطاءات",type:"محضر اجتماع",date:"13/08/2025",version:"Rev1",status:"معتمد",owner:"NCEC"},
+  {id:18,project:"FCRP",name:"تقييم العروض الفنية النهائي",type:"تقرير",date:"قيد التحديث",version:"V1",status:"قيد الإعداد",owner:"م. صالح المطيري"}
+];
+
+var ME = [
+  {id:1,project:"CLTM-2",subject:"الاجتماع الافتتاحي KOM",date:"27/11/2023",type:"افتتاحي",attendees:"NCEC, PMSC, بانديون",actions:"تسليم خطة التنفيذ"},
+  {id:2,project:"CLTM-2",subject:"اجتماع التقرير السنوي الأول",date:"04/07/2024",type:"متابعة",attendees:"NCEC, PMSC, بانديون",actions:"مراجعة خطة السنة الثانية"},
+  {id:3,project:"MARC",subject:"الاجتماع الافتتاحي KOM",date:"22/11/2023",type:"افتتاحي",attendees:"NCEC, PMSC, Euro Group",actions:"تسليم الموقع — بدء التصميم"},
+  {id:4,project:"MARC",subject:"ورشة مواءمة أصحاب المصلحة",date:"27/02/2025",type:"ورشة عمل",attendees:"NCEC, KFUPM, PMSC, Euro Group, PwC",actions:"تقييم خيارات الشراكة مع KFUPM"},
+  {id:5,project:"MARC",subject:"اجتماع الإعداد القانوني",date:"10/03/2025",type:"تنسيق",attendees:"NCEC, PMSC, Euro Group, PwC",actions:"تقرير خيارات الهيكل القانوني"},
+  {id:6,project:"MARC",subject:"اجتماع الركائز والمكونات",date:"11/03/2025",type:"تنسيق",attendees:"NCEC, PMSC, Euro Group, PwC",actions:"وثيقة الركائز والمكونات"},
+  {id:7,project:"MARC",subject:"اجتماع مواضيع الأبحاث والتطوير",date:"16/03/2025",type:"تنسيق",attendees:"NCEC, PMSC, Euro Group, PwC",actions:"قائمة مواضيع البحث المعتمدة"},
+  {id:8,project:"MARC",subject:"ورشة الرؤية المشتركة",date:"07/04/2025",type:"ورشة عمل",attendees:"NCEC, PMSC, Euro Group, PwC",actions:"وثيقة الرؤية المشتركة النهائية"},
+  {id:9,project:"AAIR",subject:"ورشة مقدمي العطاءات Bidders Meeting",date:"13/08/2025",type:"ورشة عمل",attendees:"NCEC + شركات متنافسة",actions:"الرد على الاستفسارات — تأكيد 12 شهراً"},
+  {id:10,project:"FCRP",subject:"ورشة مقدمي العطاءات Bidders Meeting",date:"13/08/2025",type:"ورشة عمل",attendees:"NCEC + 8 شركات متنافسة",actions:"الرد على الاستفسارات — تأكيد 9 مواقع"}
+];
+
+var AC = [
+  {id:1,project:"MARC",action:"إعداد وثيقة الرؤية المشتركة للمركز",owner:"م. مالك البدر",priority:"عالية",deadline:"مايو 2025",status:"قيد الإعداد"},
+  {id:2,project:"MARC",action:"تقرير خيارات الهيكل القانوني",owner:"PwC",priority:"عالية",deadline:"أبريل 2025",status:"قيد الإعداد"},
+  {id:3,project:"MARC",action:"خريطة المختبرات والمعدات مقارنة KFUPM",owner:"Euro Group",priority:"متوسطة",deadline:"مايو 2025",status:"قيد الإعداد"},
+  {id:4,project:"CLTM-2",action:"مراجعة خطة أعمال السنة الثانية",owner:"م. فهد الحمود",priority:"متوسطة",deadline:"أغسطس 2024",status:"قيد المتابعة"},
+  {id:5,project:"AAIR",action:"إنهاء تقييم عروض الطرح الثاني",owner:"م. صالح المطيري",priority:"عالية",deadline:"قيد التحديث",status:"قيد الإعداد"},
+  {id:6,project:"AAIR",action:"الترسية على المتنافس الفائز",owner:"م. فهد الحمود",priority:"عالية",deadline:"قيد التحديث",status:"قيد الإعداد"},
+  {id:7,project:"FCRP",action:"مراجعة تقييم العروض الفنية النهائي",owner:"م. صالح المطيري",priority:"عالية",deadline:"قيد التحديث",status:"قيد الإعداد"},
+  {id:8,project:"FCRP",action:"الترسية على المتنافس الفائز",owner:"م. فهد الحمود",priority:"عالية",deadline:"قيد التحديث",status:"قيد الإعداد"}
+];
+
+var CO = [
+  {id:1,project:"MARC",subject:"خطاب تسمية مدير المشروع",dir:"صادر",date:"22/11/2023",from:"NCEC",to:"Euro Group",reply:"لا"},
+  {id:2,project:"CLTM-2",subject:"خطاب تسمية مدير المشروع CLTM-2",dir:"صادر",date:"22/11/2023",from:"NCEC",to:"بانديون",reply:"لا"},
+  {id:3,project:"MARC",subject:"خطاب إيقاف مشروع MARC",dir:"صادر",date:"15/08/2024",from:"NCEC",to:"Euro Group",reply:"لا"},
+  {id:4,project:"MARC",subject:"خطاب استئناف مشروع MARC",dir:"صادر",date:"15/12/2024",from:"NCEC",to:"Euro Group",reply:"لا"},
+  {id:5,project:"AAIR",subject:"خطاب طلب اعتماد الطرح",dir:"صادر",date:"21/05/2025",from:"م. فهد الحمود",to:"المدير التنفيذي",reply:"لا"},
+  {id:6,project:"FCRP",subject:"مرئيات المركز على كراسة المعالجة",dir:"وارد",date:"قيد التحديث",from:"الجهة المختصة",to:"NCEC",reply:"نعم"}
+];
+
+var RI = [
+  {id:1,project:"MARC",desc:"إيقاف المشروع 4 أشهر",level:"متوسط",action:"استئناف رسمي 15/12/2024",status:"محلول"},
+  {id:2,project:"MARC",desc:"تعقيد الهيكل القانوني للمركز",level:"متوسط",action:"PwC تعمل على التقرير",status:"قيد المعالجة"},
+  {id:3,project:"AAIR",desc:"عدم تزامن جدولي AAIR و FCRP",level:"متوسط",action:"تأكيد التزامن في الورشة",status:"قيد المتابعة"},
+  {id:4,project:"CLTM-2",desc:"تأخير برنامج التدريب",level:"منخفض",action:"مراجعة خطة السنة الثانية",status:"قيد المتابعة"}
+];
+
+// ══ HELPERS ══
+var TC = {"عقد":"bt","محضر اجتماع":"bb","كراسة":"bp","تقرير":"bg","خطة":"ba","محضر":"bb","ميثاق":"bt","قرار":"br","خطاب":"bgy"};
+var SC = {"معتمد":"bg","قيد الإعداد":"ba"};
+var PC = {"عالية":"br","متوسطة":"ba","منخفضة":"bg"};
+var AS = {"قيد الإعداد":"ba","مكتمل":"bg","متأخر":"br","قيد المتابعة":"bb"};
+var MT = {"افتتاحي":"bt","ورشة عمل":"bp","متابعة":"bg","تنسيق":"bb"};
+var RL = {"مرتفع":"br","متوسط":"ba","منخفض":"bg"};
+var RS = {"محلول":"bg","قيد المعالجة":"ba","قيد المتابعة":"bb","جديد":"br"};
+
+function b(c,t) { return '<span class="bdg '+c+'">'+t+'</span>'; }
+function hB(h) { return h==="جيد" ? b("bg",h) : b("ba",h); }
+function tL(ed) {
+  if(!ed) return {p:0,t:"غير محدد"};
+  var e=new Date(ed), n=new Date();
+  var du=e-new Date(e.getFullYear()-3,e.getMonth(),e.getDate());
+  var p=Math.min(100,Math.max(0,Math.round(((n-(e-du))/du)*100)));
+  var d=Math.round((e-n)/86400000);
+  return {p:p, t:d>0?"متبقٍ "+d+" يوم":"انتهى"};
+}
+function tv() {
+  return P.reduce(function(s,p){var v=parseFloat((p.contractValue||"").replace(/,/g,""));return s+(isNaN(v)?0:v);},0);
+}
+
+// ══ NAV ══
+document.querySelectorAll("[data-s]").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".sec").forEach(function(s){s.classList.remove("on");});
+    document.querySelectorAll("[data-s]").forEach(function(b){b.classList.remove("on");});
+    document.getElementById(this.dataset.s).classList.add("on");
+    this.classList.add("on");
+    window.scrollTo(0,0);
+  });
+});
+
+// ══ DASHBOARD ══
+function rDash() {
+  var oa = AC.filter(function(a){return a.status!=="مكتمل";}).length;
+  var ra = RI.filter(function(r){return r.status!=="محلول";}).length;
+  document.getElementById("dm").innerHTML =
+    '<div class="mc"><div class="mc-l">المشاريع</div><div class="mc-v" style="color:#1A2332">'+P.length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">قيمة المحفظة</div><div class="mc-v" style="color:#0D7B5E;font-size:18px">'+(tv()/1000000).toFixed(1)+'M+</div><div class="mc-l" style="margin-top:3px">ريال</div></div>'+
+    '<div class="mc"><div class="mc-l">إجراءات مفتوحة</div><div class="mc-v" style="color:#BA7517">'+oa+'</div></div>'+
+    '<div class="mc"><div class="mc-l">مخاطر نشطة</div><div class="mc-v" style="color:#A32D2D">'+ra+'</div></div>'+
+    '<div class="mc"><div class="mc-l">اجتماعات</div><div class="mc-v" style="color:#1A2332">'+ME.length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">مستندات</div><div class="mc-v" style="color:#3B6D11">'+DO.length+'</div></div>';
+
+  document.getElementById("dp").innerHTML = P.map(function(p) {
+    var tl=tL(p.endDate), pc=p.progress||0;
+    return '<div class="pc" data-code="'+p.code+'">'+
+      '<div class="pch"><div class="pcc">'+p.code+' — '+p.number+'</div><div class="pcn">'+p.name+'</div></div>'+
+      '<div class="pcb">'+
+      '<div class="pr"><span class="pr-l">المقاول</span><span class="pr-v" style="font-size:10px">'+p.contractor+'</span></div>'+
+      '<div class="pr"><span class="pr-l">القيمة</span><span class="pr-v">'+p.contractValue+' ريال</span></div>'+
+      '<div class="pr"><span class="pr-l">المرحلة</span><span class="pr-v">'+b("bb",p.phase)+'</span></div>'+
+      '<div class="pr"><span class="pr-l">آخر اجتماع</span><span class="pr-v" style="font-size:10px">'+p.lastMeeting+'</span></div>'+
+      '<div class="pr"><span class="pr-l">إجراءات</span><span class="pr-v" style="color:'+(p.openActions>0?"#BA7517":"#3B6D11")+';font-weight:700">'+p.openActions+'</span></div>'+
+      '</div>'+
+      '<div class="pw"><div class="ph"><span>الإنجاز</span><span style="font-weight:700;color:#0D7B5E">'+pc+'%</span></div>'+
+      '<div class="pb"><div class="pf'+(pc<40?" a":"")+" style=\"width:"+pc+'%\"></div></div></div>'+
+      (p.endDate?
+        '<div class="tw"><div class="tr"><span>الوقت المنقضي</span><span>'+tl.t+'</span></div><div class="tb"><div class="tf" style="width:'+tl.p+'%"></div></div></div>':
+        '<div class="tw"><span style="font-size:9px;color:#ccc">تاريخ الانتهاء: غير محدد</span></div>')+
+      '<div class="pcf"><span class="bdg bg">'+p.status+'</span>'+hB(p.health)+'</div>'+
+      '</div>';
+  }).join("");
+
+  document.querySelectorAll("[data-code]").forEach(function(el) {
+    el.addEventListener("click", function(){showBrief(this.dataset.code);});
+  });
+
+  document.getElementById("dtl").innerHTML = [
+    {d:"a",dt:"13 أغسطس 2025",t:"ورشة مقدمي العطاءات — AAIR و FCRP في مقر NCEC",p:"AAIR + FCRP"},
+    {d:"",dt:"07 أبريل 2025",t:"ورشة الرؤية المشتركة لمشروع MARC",p:"MARC"},
+    {d:"a",dt:"21 مايو 2025",t:"اعتماد طرح مشروع جزيرة أبوعلي رقم 74/00/62",p:"AAIR"},
+    {d:"a",dt:"15 ديسمبر 2024",t:"استئناف مشروع MARC بعد إيقاف 4 أشهر",p:"MARC"},
+    {d:"",dt:"04 يوليو 2024",t:"اعتماد التقرير السنوي الأول لمشروع CLTM-2",p:"CLTM-2"}
+  ].map(function(i){
+    return '<div class="tl-i"><div class="tl-d '+i.d+'"></div>'+
+      '<div><div style="font-size:9px;color:#aaa;margin-bottom:2px">'+i.dt+'</div>'+
+      '<div style="font-size:12px">'+i.t+'</div>'+
+      '<div style="font-size:9px;font-weight:600;color:#0D7B5E;margin-top:2px">'+i.p+'</div></div></div>';
+  }).join("");
+}
+
+// ══ PROJECTS ══
+function rProj() {
+  document.getElementById("pl").innerHTML = P.map(function(p) {
+    var pd=DO.filter(function(d){return d.project===p.code;}).length;
+    var pm=ME.filter(function(m){return m.project===p.code;}).length;
+    var pa=AC.filter(function(a){return a.project===p.code&&a.status!=="مكتمل";}).length;
+    var pr=RI.filter(function(r){return r.project===p.code&&r.status!=="محلول";});
+    var tl=tL(p.endDate);
+    return '<div class="sc">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px">'+
+      '<div><div style="font-size:9px;font-weight:700;color:#0D7B5E">'+p.code+' — '+p.number+'</div>'+
+      '<div style="font-size:15px;font-weight:700">'+p.name+'</div></div>'+
+      '<div style="display:flex;gap:8px;align-items:center">'+hB(p.health)+
+      '<button class="btn-r" style="font-size:10px;padding:4px 10px" data-brief="'+p.code+'">ملخص</button></div></div>'+
+      '<div class="mcg" style="margin-bottom:12px">'+
+      '<div class="mc"><div class="mc-l">المستندات</div><div class="mc-v" style="color:#0D7B5E">'+pd+'</div></div>'+
+      '<div class="mc"><div class="mc-l">الاجتماعات</div><div class="mc-v" style="color:#185FA5">'+pm+'</div></div>'+
+      '<div class="mc"><div class="mc-l">إجراءات مفتوحة</div><div class="mc-v" style="color:'+(pa>0?"#BA7517":"#3B6D11")+'">'+pa+'</div></div>'+
+      '</div>'+
+      '<div class="dg">'+
+      '<div class="dc"><div class="dc-t">بيانات العقد</div>'+
+      '<div class="df"><span class="df-l">المقاول</span><span class="df-v" style="font-size:10px">'+p.contractor+'</span></div>'+
+      '<div class="df"><span class="df-l">القيمة</span><span class="df-v">'+p.contractValue+' ريال</span></div>'+
+      '<div class="df"><span class="df-l">البدء</span><span class="df-v">'+p.contractDate+'</span></div>'+
+      '<div class="df"><span class="df-l">الانتهاء</span><span class="df-v">'+(p.endDate||'<span style="color:#ccc">غير محدد</span>')+'</span></div>'+
+      '<div class="df"><span class="df-l">مدير المشروع</span><span class="df-v" style="font-size:10px">'+p.pm+'</span></div></div>'+
+      '<div class="dc"><div class="dc-t">التقدم</div>'+
+      '<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span>الإنجاز</span><span style="font-weight:700;color:#0D7B5E">'+p.progress+'%</span></div>'+
+      '<div class="pb" style="height:9px"><div class="pf'+(p.progress<40?" a":"")+" style=\"width:"+p.progress+'%\"></div></div></div>'+
+      (p.endDate?'<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span>الوقت</span><span>'+tl.t+'</span></div><div class="tb" style="height:6px"><div class="tf" style="width:'+tl.p+'%"></div></div></div>':'')+
+      '<div class="df"><span class="df-l">الصحة</span><span>'+hB(p.health)+'</span></div>'+
+      '<div style="margin-top:8px;padding:7px;background:#F1EFE8;border-radius:5px;font-size:10px;color:#666">'+p.note+'</div></div></div>'+
+      (pr.length>0?'<div style="padding:8px;background:#FCEBEB;border-radius:6px;font-size:10px;color:#A32D2D;margin-top:8px">'+
+      '⚠ مخاطر نشطة: '+pr.map(function(r){return r.desc;}).join(" — ")+'</div>':'')+
+      '</div>';
+  }).join("");
+  document.querySelectorAll("[data-brief]").forEach(function(btn){
+    btn.addEventListener("click",function(){showBrief(this.dataset.brief);});
+  });
+}
+
+// ══ DOCS ══
+function rDocM() {
+  document.getElementById("doc-m").innerHTML =
+    '<div class="mc"><div class="mc-l">الإجمالي</div><div class="mc-v" style="color:#1A2332">'+DO.length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">معتمد</div><div class="mc-v" style="color:#3B6D11">'+DO.filter(function(d){return d.status==="معتمد";}).length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">قيد الإعداد</div><div class="mc-v" style="color:#BA7517">'+DO.filter(function(d){return d.status!=="معتمد";}).length+'</div></div>';
+}
+function rDocs(data) {
+  document.getElementById("doc-b").innerHTML = data.map(function(d){
+    return '<tr><td style="color:#aaa">'+d.id+'</td><td>'+b("bt",d.project)+'</td>'+
+      '<td style="font-weight:500">'+d.name+'</td><td>'+b(TC[d.type]||"bgy",d.type)+'</td>'+
+      '<td>'+d.date+'</td><td>'+b(SC[d.status]||"ba",d.status)+'</td>'+
+      '<td style="font-size:10px">'+d.owner+'</td></tr>';
+  }).join("");
+}
+
+// ══ MEETINGS ══
+function rMeetM() {
+  document.getElementById("meet-m").innerHTML =
+    '<div class="mc"><div class="mc-l">الإجمالي</div><div class="mc-v" style="color:#1A2332">'+ME.length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">MARC</div><div class="mc-v" style="color:#0D7B5E">'+ME.filter(function(m){return m.project==="MARC";}).length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">CLTM-2</div><div class="mc-v" style="color:#0D7B5E">'+ME.filter(function(m){return m.project==="CLTM-2";}).length+'</div></div>'+
+    '<div class="mc"><div class="mc-l">AAIR+FCRP</div><div class="mc-v" style="color:#0D7B5E">'+ME.filter(function(m){return m.project==="AAIR"||m.project==="FCRP";}).length+'</div></div>';
+}
+function rMeetings(data) {
+  document.getElementById("meet-b").innerHTML = data.map(function(m){
+    return '<tr><td style="color:#aaa">'+m.id+'</td><td>'+b("bt",m.project)+'</td>'+
+      '<td style="font-weight:500">'+m.subject+'</td><td>'+m.date+'</td>'+
+      '<td>'+b(MT[m.type]||"bgy",m.type)+'</td>'+
+      '<td style="font-size:10px;color:#666">'+m.attendees+'</td>'+
+      '<td style="font-size:10px">'+m.actions+'</td></tr>';
+  }).join("");
+}
+
+// ══ ACTIONS ══
+function rActions(data) {
+  document.getElementById("act-b").innerHTML = data.map(function(a){
+    return '<tr><td style="color:#aaa">'+a.id+'</td><td>'+b("bt",a.project)+'</td>'+
+      '<td style="font-weight:500">'+a.action+'</td><td style="font-size:10px">'+a.owner+'</td>'+
+      '<td>'+b(PC[a.priority]||"bgy",a.priority)+'</td><td>'+a.deadline+'</td>'+
+      '<td>'+b(AS[a.status]||"bgy",a.status)+'</td></tr>';
+  }).join("");
+}
+
+// ══ CORR ══
+function rCorr(data) {
+  document.getElementById("corr-b").innerHTML = data.map(function(c){
+    return '<tr><td style="color:#aaa">'+c.id+'</td><td>'+b("bt",c.project)+'</td>'+
+      '<td style="font-weight:500">'+c.subject+'</td>'+
+      '<td>'+b(c.dir==="صادر"?"bt":"bp",c.dir)+'</td>'+
+      '<td>'+c.date+'</td><td style="font-size:10px">'+c.from+'</td>'+
+      '<td style="font-size:10px">'+c.to+'</td>'+
+      '<td>'+b(c.reply==="نعم"?"ba":"bg",c.reply)+'</td></tr>';
+  }).join("");
+}
+
+// ══ RISKS ══
+function rRisks(data) {
+  document.getElementById("risk-b").innerHTML = data.map(function(r){
+    return '<tr><td style="color:#aaa">'+r.id+'</td><td>'+b("bt",r.project)+'</td>'+
+      '<td style="font-weight:500">'+r.desc+'</td><td>'+b(RL[r.level]||"bgy",r.level)+'</td>'+
+      '<td style="font-size:10px">'+r.action+'</td><td>'+b(RS[r.status]||"bgy",r.status)+'</td></tr>';
+  }).join("");
+}
+
+// ══ CONTRACTORS ══
+function rCon() {
+  var cs = [
+    {n:"شركة بانديون المحدودة",p:"CLTM-2",r:"مقاول رئيسي",v:"38,410,000",i:15,s:"نشط",no:"التقرير السنوي الأول مكتمل"},
+    {n:"Euro Group وشريكه",p:"MARC",r:"مصمم / استشاري",v:"11,385,000",i:3,s:"نشط",no:"في مرحلة التصميم المفاهيمي"},
+    {n:"PwC برايس ووترهاوس",p:"MARC",r:"استشاري قانوني",v:"—",i:0,s:"نشط",no:"يعمل على الهيكل القانوني"},
+    {n:"CH2M Hill Arabia",p:"MARC+CLTM-2",r:"دعم إدارة البرنامج",v:"—",i:0,s:"نشط",no:"متواجد في المشروعين"},
+    {n:"قيد الترسية — AAIR",p:"AAIR",r:"مقاول تنفيذ",v:"قيد التقييم",i:0,s:"قيد الترسية",no:"الطرح الثاني قيد التقييم"},
+    {n:"قيد الترسية — FCRP",p:"FCRP",r:"استشاري تصميم",v:"قيد التقييم",i:0,s:"قيد الترسية",no:"8 شركات تنافست"}
+  ];
+  document.getElementById("con-g").innerHTML = cs.map(function(c){
+    return '<div class="cc">'+
+      '<div style="font-size:13px;font-weight:600;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #D3D1C7">'+c.n+'</div>'+
+      '<div class="df"><span class="df-l">المشروع</span><span>'+b("bt",c.p)+'</span></div>'+
+      '<div class="df"><span class="df-l">الدور</span><span class="df-v" style="font-size:10px">'+c.r+'</span></div>'+
+      '<div class="df"><span class="df-l">القيمة</span><span class="df-v">'+c.v+'</span></div>'+
+      '<div class="df"><span class="df-l">الفواتير</span><span class="df-v">'+c.i+'</span></div>'+
+      '<div class="df"><span class="df-l">الحالة</span><span>'+b(c.s==="نشط"?"bg":"ba",c.s)+'</span></div>'+
+      '<div style="margin-top:9px;padding:7px;background:#F1EFE8;border-radius:5px;font-size:10px;color:#666">'+c.no+'</div></div>';
+  }).join("");
+}
+
+// ══ AUDIT ══
+function rAudit() {
+  var cks = [
+    {l:"وثيقة العقد",k:"عقد"},{l:"ميثاق المشروع",k:"ميثاق"},{l:"محضر تسليم الموقع",k:"محضر"},
+    {l:"تسمية مدير المشروع",k:"خطاب"},{l:"قرار تشكيل الفريق",k:"قرار"},{l:"كراسة الشروط",k:"كراسة"},
+    {l:"التقارير الدورية",k:"تقرير"},{l:"خطة التنفيذ",k:"خطة"},{l:"سجل المراسلات",k:"_corr"}
+  ];
+  document.getElementById("audit-b").innerHTML = P.map(function(p){
+    var pd = DO.filter(function(d){return d.project===p.code;});
+    var hc = CO.filter(function(c){return c.project===p.code;}).length>0;
+    var rs = cks.map(function(c){
+      var ok = c.k==="_corr" ? hc : pd.some(function(d){return d.type===c.k&&d.status==="معتمد";});
+      return {l:c.l,ok:ok};
+    });
+    var sc = Math.round((rs.filter(function(r){return r.ok;}).length/rs.length)*100);
+    return '<div class="sc">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+      '<div><div style="font-size:10px;font-weight:700;color:#0D7B5E">'+p.code+'</div>'+
+      '<div style="font-size:14px;font-weight:600">'+p.name+'</div></div>'+
+      '<div style="text-align:center"><div style="font-size:24px;font-weight:700;color:'+(sc>=80?"#3B6D11":sc>=50?"#BA7517":"#A32D2D")+'">'+sc+'%</div>'+
+      '<div style="font-size:9px;color:#888">جاهزية التدقيق</div></div></div>'+
+      '<div class="pb" style="margin-bottom:12px"><div class="pf'+(sc<50?" a":"")+" style=\"width:"+sc+'%\"></div></div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">'+
+      rs.map(function(r){
+        return '<div class="ai-i"><div class="ck '+(r.ok?"ck-y":"ck-n")+'">'+(r.ok?"✓":"✗")+'</div><span>'+r.l+'</span></div>';
+      }).join("")+
+      '</div>'+
+      (sc<100?'<div style="margin-top:10px;padding:7px;background:#FAEEDA;border-radius:5px;font-size:10px;color:#BA7517">'+
+      'ناقص: '+rs.filter(function(r){return!r.ok;}).map(function(r){return r.l;}).join(" — ")+'</div>':'')+
+      '</div>';
+  }).join("");
+}
+
+// ══ FOLDERS ══
+function rFold() {
+  document.getElementById("fold-t").textContent =
+    "📁 [رمز] - [اسم المشروع]\n" +
+    "├── 01 - نظرة عامة\n" +
+    "├── 02 - وثائق التأسيس\n" +
+    "│   ├── كراسة الشروط (RFP)\n" +
+    "│   └── خطاب طلب الطرح\n" +
+    "├── 03 - العروض والتقييم\n" +
+    "│   ├── [اسم كل شركة]\n" +
+    "│   └── قرار الترسية\n" +
+    "├── 04 - العقد والارتباط المالي\n" +
+    "├── 05 - إدارة المشروع\n" +
+    "│   ├── الفريق الفني\n" +
+    "│   └── الملفات الفنية\n" +
+    "├── 06 - المحاضر والاجتماعات\n" +
+    "├── 07 - الملفات الفنية والتقارير\n" +
+    "├── 08 - المراسلات\n" +
+    "│   ├── صادر\n" +
+    "│   └── وارد\n" +
+    "├── 09 - المستخلصات والفواتير\n" +
+    "├── 10 - أوامر التغيير\n" +
+    "└── 11 - الأرشيف";
+}
+
+// ══ BRIEF ══
+function showBrief(code) {
+  var p = P.find(function(x){return x.code===code;});
+  if(!p) return;
+  var pa = AC.filter(function(a){return a.project===code&&a.status!=="مكتمل";});
+  var pm = ME.filter(function(m){return m.project===code;});
+  var pr = RI.filter(function(r){return r.project===code&&r.status!=="محلول";});
+  var lm = pm.length>0 ? pm[pm.length-1] : null;
+  var now = new Date().toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"});
+  document.getElementById("brief-t").textContent = "ملخص — "+code;
+  document.getElementById("brief-b").innerHTML =
+    '<div style="border:2px solid #1A2332;border-radius:8px;padding:16px">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #D3D1C7">'+
+    '<div><div style="font-size:9px;font-weight:700;color:#0D7B5E">'+p.code+' — '+p.number+'</div>'+
+    '<div style="font-size:16px;font-weight:700">'+p.name+'</div>'+
+    '<div style="font-size:10px;color:#888">'+p.nameEn+'</div></div>'+
+    '<div style="text-align:left">'+hB(p.health)+'<div style="font-size:9px;color:#aaa;margin-top:4px">'+now+'</div></div></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'+
+    '<div><div style="font-size:9px;font-weight:700;color:#0D7B5E;margin-bottom:7px">بيانات العقد</div>'+
+    '<div style="font-size:11px">'+
+    '<div style="padding:4px 0;border-bottom:1px solid #f5f3ef"><span style="color:#888">المقاول: </span>'+p.contractor+'</div>'+
+    '<div style="padding:4px 0;border-bottom:1px solid #f5f3ef"><span style="color:#888">القيمة: </span>'+p.contractValue+' ريال</div>'+
+    '<div style="padding:4px 0;border-bottom:1px solid #f5f3ef"><span style="color:#888">البدء: </span>'+p.contractDate+'</div>'+
+    '<div style="padding:4px 0"><span style="color:#888">مدير المشروع: </span>'+p.pm+'</div></div></div>'+
+    '<div><div style="font-size:9px;font-weight:700;color:#0D7B5E;margin-bottom:7px">الحالة</div>'+
+    '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px">'+
+    '<span>الإنجاز</span><span style="font-weight:700">'+p.progress+'%</span></div>'+
+    '<div class="pb"><div class="pf" style="width:'+p.progress+'%"></div></div></div>'+
+    '<div style="font-size:11px">'+
+    '<div style="padding:4px 0"><span style="color:#888">المرحلة: </span>'+p.phase+'</div>'+
+    '<div style="padding:4px 0"><span style="color:#888">الاجتماعات: </span>'+pm.length+'</div></div></div></div>'+
+    (pa.length>0?
+      '<div style="background:#FAEEDA;padding:9px;border-radius:5px;margin-bottom:9px;font-size:11px">'+
+      '<strong style="color:#BA7517">إجراءات مفتوحة:</strong><br>'+
+      pa.map(function(a){return a.action+" ("+a.owner+")";}).join("<br>")+'</div>':"")+
+    (lm?
+      '<div style="background:#E6F1FB;padding:9px;border-radius:5px;margin-bottom:9px;font-size:11px">'+
+      '<strong style="color:#185FA5">آخر اجتماع:</strong> '+lm.subject+' — '+lm.date+'</div>':"")+
+    (pr.length>0?
+      '<div style="background:#FCEBEB;padding:9px;border-radius:5px;font-size:11px;margin-bottom:9px">'+
+      '<strong style="color:#A32D2D">مخاطر نشطة:</strong> '+pr.map(function(r){return r.desc;}).join(" | ")+'</div>':"")+
+    '<div style="padding:8px;background:#F1EFE8;border-radius:5px;font-size:10px;color:#666">'+p.note+'</div>'+
+    '</div>'+
+    '<div style="font-size:9px;color:#aaa;text-align:center;margin-top:10px">نظام إدارة المشاريع — NCEC | '+now+'</div>';
+  document.getElementById("mo-brief").classList.add("open");
+}
+
+// ══ REPORT ══
+function genReport() {
+  var now = new Date().toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"});
+  var nowEn = new Date().toLocaleDateString("en-GB",{year:"numeric",month:"long",day:"numeric"});
+  var total = tv();
+  var w = window.open("","_blank");
+  var html = "<!DOCTYPE html><html dir='rtl'><head><meta charset='UTF-8'><title>تقرير NCEC</title>" +
+    "<style>body{font-family:'Segoe UI',Arial,sans-serif;padding:35px;direction:rtl;color:#1A2332}" +
+    "h2{font-size:15px;font-weight:700;border-bottom:2px solid #0D7B5E;padding-bottom:7px;margin:22px 0 12px}" +
+    "table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:14px}" +
+    "th{background:#1A2332;color:#fff;padding:8px 9px;text-align:right;font-weight:500}" +
+    "td{padding:7px 9px;border-bottom:1px solid #e8e5e0}" +
+    "tr:nth-child(even) td{background:#f8f7f4}" +
+    ".bdg{padding:2px 7px;border-radius:7px;font-size:9px;font-weight:600}" +
+    ".bg{background:#EAF3DE;color:#3B6D11}.ba{background:#FAEEDA;color:#BA7517}" +
+    ".br{background:#FCEBEB;color:#A32D2D}.bt{background:#E1F5EE;color:#0D7B5E}" +
+    ".pb{height:7px;background:#e8e5e0;border-radius:3px;overflow:hidden}" +
+    ".pf{height:100%;background:#0D7B5E;border-radius:3px}" +
+    ".cover{text-align:center;padding:28px 0;border-bottom:3px solid #1A2332;margin-bottom:22px}" +
+    ".sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}" +
+    ".sm{background:#f8f7f4;border-radius:7px;padding:11px;text-align:center;border:1px solid #e8e5e0}" +
+    ".sl{font-size:9px;color:#888;margin-bottom:3px}.sv{font-size:18px;font-weight:700}" +
+    ".en{direction:ltr;text-align:left;border-top:2px solid #0D7B5E;margin-top:36px;padding-top:24px}" +
+    "@page{margin:18mm}@media print{.no-print{display:none}}</style></head><body>" +
+    "<div class='no-print' style='text-align:right;margin-bottom:18px'>" +
+    "<button onclick='window.print()' style='background:#0D7B5E;color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px'>طباعة / حفظ PDF</button></div>" +
+    "<div class='cover'>" +
+    "<div style='font-size:10px;letter-spacing:2px;color:#888;margin-bottom:7px'>المركز الوطني للرقابة على الالتزام البيئي — NCEC</div>" +
+    "<div style='font-size:20px;font-weight:700;margin-bottom:5px'>تقرير حالة المشاريع</div>" +
+    "<div style='font-size:12px;color:#666'>Environmental Remediation Program Status Report</div>" +
+    "<div style='font-size:10px;color:#aaa;margin-top:10px'>"+now+" | "+nowEn+"</div></div>" +
+    "<h2>ملخص تنفيذي</h2>" +
+    "<div class='sg'>" +
+    "<div class='sm'><div class='sl'>المشاريع</div><div class='sv' style='color:#1A2332'>"+P.length+"</div></div>" +
+    "<div class='sm'><div class='sl'>قيمة المحفظة</div><div class='sv' style='color:#0D7B5E'>"+(total/1000000).toFixed(1)+"M+</div></div>" +
+    "<div class='sm'><div class='sl'>إجراءات مفتوحة</div><div class='sv' style='color:#BA7517'>"+AC.filter(function(a){return a.status!=="مكتمل";}).length+"</div></div>" +
+    "<div class='sm'><div class='sl'>مخاطر نشطة</div><div class='sv' style='color:#A32D2D'>"+RI.filter(function(r){return r.status!=="محلول";}).length+"</div></div>" +
+    "</div>" +
+    "<h2>حالة المشاريع</h2>" +
+    "<table><thead><tr><th>الرمز</th><th>اسم المشروع</th><th>المقاول</th><th>المرحلة</th><th>الإنجاز</th><th>الصحة</th></tr></thead><tbody>" +
+    P.map(function(p){
+      return "<tr><td><strong>"+p.code+"</strong></td><td>"+p.name+"</td>" +
+        "<td style='font-size:10px'>"+p.contractor+"</td><td style='font-size:10px'>"+p.phase+"</td>" +
+        "<td>"+p.progress+"%</td>" +
+        "<td><span class='bdg "+(p.health==="جيد"?"bg":"ba")+"'>"+p.health+"</span></td></tr>";
+    }).join("")+
+    "</tbody></table>" +
+    "<h2>الإجراءات المفتوحة</h2>" +
+    "<table><thead><tr><th>المشروع</th><th>الإجراء</th><th>المسؤول</th><th>الأولوية</th><th>الموعد</th></tr></thead><tbody>" +
+    AC.filter(function(a){return a.status!=="مكتمل";}).map(function(a){
+      return "<tr><td><span class='bdg bt'>"+a.project+"</span></td><td>"+a.action+"</td>" +
+        "<td>"+a.owner+"</td>" +
+        "<td><span class='bdg "+(a.priority==="عالية"?"br":"ba")+"'>"+a.priority+"</span></td>" +
+        "<td>"+a.deadline+"</td></tr>";
+    }).join("")+
+    "</tbody></table>" +
+    "<div class='en'>" +
+    "<h2 style='direction:ltr;font-size:15px'>Executive Summary — English</h2>" +
+    "<p style='font-size:11px;color:#666;margin-bottom:14px'>NCEC Environmental Remediation Program | "+nowEn+"</p>" +
+    "<table><thead><tr><th style='text-align:left'>Project</th><th style='text-align:left'>Status</th><th style='text-align:left'>Phase</th><th style='text-align:left'>Progress</th></tr></thead><tbody>" +
+    P.map(function(p){
+      return "<tr><td><strong>"+p.code+"</strong><br><span style='font-size:10px;color:#888'>"+p.nameEn+"</span></td>" +
+        "<td><span class='bdg bg'>"+p.status+"</span></td>" +
+        "<td style='font-size:10px'>"+p.phase+"</td><td>"+p.progress+"%</td></tr>";
+    }).join("")+
+    "</tbody></table>" +
+    "<p style='font-size:10px;color:#aaa;margin-top:16px'>Total portfolio (awarded): SAR "+(total).toLocaleString()+"+ | Open actions: "+AC.filter(function(a){return a.status!=="مكتمل";}).length+"</p>" +
+    "</div>" +
+    "<div style='margin-top:28px;padding-top:12px;border-top:1px solid #e8e5e0;font-size:9px;color:#aaa;display:flex;justify-content:space-between'>" +
+    "<span>NCEC — نظام إدارة المشاريع</span><span>"+now+"</span></div>" +
+    "</body></html>";
+  w.document.write(html);
+  w.document.close();
+}
+
+// ══ FILTERS ══
+document.querySelectorAll("[data-dp]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll("[data-dp]").forEach(function(b){b.classList.remove("on");});
+    this.classList.add("on");
+    var p=this.dataset.dp;
+    rDocs(p==="all"?DO:DO.filter(function(d){return d.project===p;}));
+  });
+});
+document.getElementById("doc-s").addEventListener("input",function(){
+  var q=this.value;
+  rDocs(DO.filter(function(d){return d.name.includes(q)||d.project.includes(q)||d.type.includes(q);}));
+});
+document.querySelectorAll("[data-mp]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll("[data-mp]").forEach(function(b){b.classList.remove("on");});
+    this.classList.add("on");
+    var p=this.dataset.mp;
+    rMeetings(p==="all"?ME:ME.filter(function(m){return m.project===p;}));
+  });
+});
+document.getElementById("meet-s").addEventListener("input",function(){
+  var q=this.value;
+  rMeetings(ME.filter(function(m){return m.subject.includes(q)||m.project.includes(q);}));
+});
+document.querySelectorAll("[data-ap]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll("[data-ap]").forEach(function(b){b.classList.remove("on");});
+    this.classList.add("on");
+    var v=this.dataset.ap;
+    rActions(v==="all"?AC:AC.filter(function(a){return a.priority===v||a.status===v;}));
+  });
+});
+document.querySelectorAll("[data-cd]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll("[data-cd]").forEach(function(b){b.classList.remove("on");});
+    this.classList.add("on");
+    var v=this.dataset.cd;
+    rCorr(v==="all"?CO:CO.filter(function(c){return c.dir===v;}));
+  });
+});
+document.querySelectorAll("[data-rl]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll("[data-rl]").forEach(function(b){b.classList.remove("on");});
+    this.classList.add("on");
+    var v=this.dataset.rl;
+    rRisks(v==="all"?RI:RI.filter(function(r){return r.level===v||r.status===v;}));
+  });
+});
+
+// ══ BUTTONS ══
+document.getElementById("btn-rpt").addEventListener("click",genReport);
+document.getElementById("btn-rpt2").addEventListener("click",genReport);
+document.getElementById("btn-np").addEventListener("click",function(){document.getElementById("mo-proj").classList.add("open");});
+document.getElementById("btn-np2").addEventListener("click",function(){document.getElementById("mo-proj").classList.add("open");});
+document.getElementById("btn-cl").addEventListener("click",function(){document.getElementById("mo-proj").classList.remove("open");});
+document.getElementById("btn-cb").addEventListener("click",function(){document.getElementById("mo-brief").classList.remove("open");});
+document.getElementById("btn-print").addEventListener("click",function(){
+  var c=document.getElementById("brief-b").innerHTML;
+  var t=document.getElementById("brief-t").textContent;
+  var w=window.open("","_blank");
+  w.document.write("<!DOCTYPE html><html dir='rtl'><head><meta charset='UTF-8'><title>"+t+"</title>"+
+    "<style>body{font-family:'Segoe UI',Arial,sans-serif;padding:30px;direction:rtl}"+
+    ".pb{height:8px;background:#e0ddd8;border-radius:4px;overflow:hidden}"+
+    ".pf{height:100%;background:#0D7B5E;border-radius:4px}"+
+    ".bdg{padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600}"+
+    ".bg{background:#EAF3DE;color:#3B6D11}.ba{background:#FAEEDA;color:#BA7517}"+
+    "@page{margin:20mm}</style></head><body>"+c+"</body></html>");
+  w.document.close();w.print();
+});
+document.getElementById("btn-adoc").addEventListener("click",function(){
+  var n=prompt("اسم المستند:");if(!n)return;
+  var p=prompt("رمز المشروع:");
+  DO.push({id:DO.length+1,project:p||"—",name:n,type:"مستند",date:new Date().toLocaleDateString("ar-SA"),version:"V1",status:"قيد الإعداد",owner:""});
+  rDocs(DO);rDocM();
+});
+document.getElementById("btn-ameet").addEventListener("click",function(){
+  var s=prompt("الموضوع:");if(!s)return;
+  var p=prompt("رمز المشروع:");
+  ME.push({id:ME.length+1,project:p||"—",subject:s,date:new Date().toLocaleDateString("ar-SA"),type:"متابعة",attendees:"",actions:""});
+  rMeetings(ME);rMeetM();
+});
+document.getElementById("btn-aact").addEventListener("click",function(){
+  var a=prompt("الإجراء:");if(!a)return;
+  var p=prompt("رمز المشروع:");
+  AC.push({id:AC.length+1,project:p||"—",action:a,owner:"",priority:"متوسطة",deadline:"",status:"قيد الإعداد"});
+  rActions(AC);
+});
+document.getElementById("btn-acorr").addEventListener("click",function(){
+  var s=prompt("الموضوع:");if(!s)return;
+  var p=prompt("رمز المشروع:");
+  CO.push({id:CO.length+1,project:p||"—",subject:s,dir:"صادر",date:new Date().toLocaleDateString("ar-SA"),from:"NCEC",to:"",reply:"لا"});
+  rCorr(CO);
+});
+document.getElementById("btn-arisk").addEventListener("click",function(){
+  var d=prompt("وصف المخاطرة:");if(!d)return;
+  var p=prompt("رمز المشروع:");
+  RI.push({id:RI.length+1,project:p||"—",desc:d,level:"متوسط",action:"",status:"جديد"});
+  rRisks(RI);
+});
+document.getElementById("btn-gen").addEventListener("click",function(){
+  var c=document.getElementById("np-c").value||"[رمز]";
+  var n=document.getElementById("np-n").value||"[اسم]";
+  var co=document.getElementById("np-co").value||"[المقاول]";
+  document.getElementById("fold-n").textContent =
+    "📁 "+c+" - "+n+"\n├── 01 - نظرة عامة\n├── 02 - وثائق التأسيس\n"+
+    "├── 03 - العروض والتقييم\n│   └── "+co+"\n├── 04 - العقد والارتباط المالي\n"+
+    "├── 05 - إدارة المشروع\n│   ├── الفريق الفني\n│   └── الملفات الفنية\n"+
+    "├── 06 - المحاضر والاجتماعات\n├── 07 - الملفات الفنية والتقارير\n"+
+    "├── 08 - المراسلات\n│   ├── صادر\n│   └── وارد\n"+
+    "├── 09 - المستخلصات والفواتير\n├── 10 - أوامر التغيير\n└── 11 - الأرشيف";
+  document.getElementById("gen-o").style.display="block";
+});
+document.getElementById("btn-copy").addEventListener("click",function(){
+  navigator.clipboard.writeText(document.getElementById("fold-n").textContent).then(function(){alert("تم النسخ!");});
+});
+document.getElementById("btn-sp").addEventListener("click",function(){
+  var c=document.getElementById("ap-c").value;
+  var n=document.getElementById("ap-n").value;
+  if(!c||!n){alert("يرجى إدخال الرمز والاسم");return;}
+  P.push({
+    code:c,name:n,nameEn:n,number:"—",
+    contractor:document.getElementById("ap-co").value||"قيد التحديد",
+    contractDate:document.getElementById("ap-d").value||"قيد الإنجاز",
+    endDate:document.getElementById("ap-e").value||"",
+    contractValue:document.getElementById("ap-v").value||"قيد التقييم",
+    duration:document.getElementById("ap-du").value||"",
+    status:"نشط",phase:document.getElementById("ap-ph").value,
+    progress:parseInt(document.getElementById("ap-pr").value)||0,
+    lastMeeting:"—",openActions:0,health:"جيد",
+    pm:document.getElementById("ap-pm").value||"—",
+    note:document.getElementById("ap-no").value||""
+  });
+  document.getElementById("mo-proj").classList.remove("open");
+  initAll();
+});
+
+// ══ INIT ══
+function initAll() {
+  document.getElementById("hd").textContent = new Date().toLocaleDateString("ar-SA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  rDash(); rProj();
+  rDocM(); rDocs(DO);
+  rMeetM(); rMeetings(ME);
+  rActions(AC); rCorr(CO); rRisks(RI);
+  rCon(); rAudit(); rFold();
+}
+
+initAll();
+</script>
+</body>
+</html>
