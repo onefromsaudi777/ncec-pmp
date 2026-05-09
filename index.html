@@ -128,7 +128,7 @@ tr:hover td{background:#E1F5EE}
   <div class="sh">
     <div><div style="font-size:17px;font-weight:700">نظرة عامة</div><div style="font-size:11px;color:#888;margin-top:2px">برنامج إصلاح الأضرار البيئية</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn-r" id="btn-rpt">تقرير PDF</button>
+      <button class="btn-a" id="btn-edit" style="background:#185FA5">تعديل البيانات</button><button class="btn-r" id="btn-rpt">تقرير PDF</button>
       <button class="btn-a" id="btn-np">+ مشروع جديد</button>
     </div>
   </div>
@@ -292,6 +292,18 @@ tr:hover td{background:#E1F5EE}
       </div>
     </div>
     <div id="brief-b"></div>
+  </div>
+</div>
+
+
+<div class="mo" id="mo-edit">
+  <div class="md" style="width:620px">
+    <div class="md-t">تعديل بيانات المشاريع</div>
+    <div id="edit-list"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn-a" style="flex:1" id="btn-save-edit">حفظ التعديلات</button>
+      <button class="btn-s" id="btn-cl-edit">إلغاء</button>
+    </div>
   </div>
 </div>
 
@@ -893,6 +905,59 @@ document.getElementById("btn-sp").addEventListener("click",function(){
   document.getElementById("mo-proj").classList.remove("open");
   initAll();
 });
+
+
+// ══ EDIT MODAL ══
+function openEdit() {
+  document.getElementById("edit-list").innerHTML = P.map(function(p, i) {
+    return '<div style="background:#F1EFE8;border-radius:8px;padding:14px;margin-bottom:12px">'+
+      '<div style="font-size:11px;font-weight:700;color:#0D7B5E;margin-bottom:10px">'+p.code+' — '+p.name+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+      '<div class="fg"><label class="fl">نسبة الإنجاز %</label>'+
+      '<input class="fi" type="number" min="0" max="100" id="ep-prog-'+i+'" value="'+p.progress+'"></div>'+
+      '<div class="fg"><label class="fl">المرحلة الحالية</label>'+
+      '<input class="fi" id="ep-phase-'+i+'" value="'+p.phase+'"></div>'+
+      '<div class="fg"><label class="fl">تاريخ الانتهاء</label>'+
+      '<input class="fi" type="date" id="ep-end-'+i+'" value="'+(p.endDate||'')+'"></div>'+
+      '<div class="fg"><label class="fl">مدير المشروع</label>'+
+      '<input class="fi" id="ep-pm-'+i+'" value="'+p.pm+'"></div>'+
+      '<div class="fg"><label class="fl">الحالة الصحية</label>'+
+      '<select class="fi" id="ep-health-'+i+'">'+
+      '<option '+(p.health==="جيد"?"selected":"")+'>جيد</option>'+
+      '<option '+(p.health==="متابعة مطلوبة"?"selected":"")+'>متابعة مطلوبة</option>'+
+      '<option '+(p.health==="قيد المتابعة"?"selected":"")+'>قيد المتابعة</option>'+
+      '</select></div>'+
+      '<div class="fg"><label class="fl">إجراءات مفتوحة</label>'+
+      '<input class="fi" type="number" min="0" id="ep-oa-'+i+'" value="'+p.openActions+'"></div>'+
+      '</div>'+
+      '<div class="fg"><label class="fl">ملاحظات</label>'+
+      '<textarea class="fi" id="ep-note-'+i+'" rows="2">'+p.note+'</textarea></div>'+
+      '</div>';
+  }).join("");
+  document.getElementById("mo-edit").classList.add("open");
+}
+
+function saveEdit() {
+  P.forEach(function(p, i) {
+    p.progress = parseInt(document.getElementById("ep-prog-"+i).value)||0;
+    p.phase = document.getElementById("ep-phase-"+i).value||p.phase;
+    p.endDate = document.getElementById("ep-end-"+i).value||"";
+    p.pm = document.getElementById("ep-pm-"+i).value||p.pm;
+    p.health = document.getElementById("ep-health-"+i).value;
+    p.openActions = parseInt(document.getElementById("ep-oa-"+i).value)||0;
+    p.note = document.getElementById("ep-note-"+i).value||"";
+  });
+  document.getElementById("mo-edit").classList.remove("open");
+  initAll();
+  alert("تم حفظ التعديلات بنجاح");
+}
+
+document.getElementById("btn-edit").addEventListener("click", openEdit);
+document.getElementById("btn-save-edit").addEventListener("click", saveEdit);
+document.getElementById("btn-cl-edit").addEventListener("click", function(){
+  document.getElementById("mo-edit").classList.remove("open");
+});
+
 
 // ══ INIT ══
 function initAll() {
